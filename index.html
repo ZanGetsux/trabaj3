@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+        <a class="navbar-brand" href="#"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <input class="form-control mr-sm-2" type="text" id="buscaxrut" placeholder="Buscar por Rut" aria-label="Buscar">
+                <button class="btn btn-outline-success my-2 my-sm-0" onclick="traeClientesxRut()" id="btn1">Buscar</button>
+                <button class="btn btn-outline-danger my-2 my-sm-0" onclick="traeClientes(); $('#buscaxrut').val('');" style="display: none;" id="btn2">Limpiar</button>
+            </ul>
+            <button class="btn btn-outline-danger my-2 my-sm-0" onclick="document.getElementById('formulario').reset(); $('#exampleModal').modal('show');">Agregar Cliente</button>
+        </div>
+    </nav>
+
+    <div style="padding-left: 5%; padding-right: 5%;">
+        <table class="table table-hover">
+            <thead>
+                <tr style="background-color: #ffd2d2;">
+                    <th scope="col">Rut</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Mail</th>
+                    <th scope="col">Celular</th>
+                    <th scope="col">Direccion</th>
+                    <th scope="col">Estado Civil</th>
+                    <th scope="col">Fecha Nacimiento</th>
+                    <th scope="col">Contraseña</th>
+                </tr>
+            </thead>
+            <tbody id="llenarcontenido">
+
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ingreso de Clientes</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" id="formulario" novalidate>
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="txtRut">RUT</label>
+                                <input type="text" class="form-control" id="txtRut" placeholder="RUT" required>
+                                <div class="valid-feedback">
+                                    Correcto!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="txtNombre">Nombre</label>
+                                <input type="text" class="form-control" id="txtNombre" placeholder="Ingresar Nombre" required>
+                                <div class="invalid-feedback">
+                                    Campo Obligatorio!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="txtCelular">Celular</label>
+                                <input type="tel" class="form-control" id="txtCelular" placeholder="Ingresar Celular" required maxlength="8" onblur="comprueba1()">
+                                <div class="invalid-feedback">
+                                    Campo Obligatorio!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="txtDireccion">Dirección</label>
+                                <input type="text" class="form-control" id="txtDireccion" placeholder="Ingresar Dirección" required>
+                                <div class="invalid-feedback">
+                                    Campo Obligatorio!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="selectEstadoCivil">Estado Civil</label>
+                                <select class="form-control" id="selectEstadoCivil" required>
+                                    <option value="SOLTERO">SOLTERO</option>
+                                    <option value="CASADO(A)">CASADO(A)</option>
+                                    <option value="DIVORCIADO(A)">DIVORCIADO(A)</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Campo Obligatorio!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="txtCorreo">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="txtCorreo" placeholder="Ingresar Correo" aria-describedby="emailHelp" required>
+                                <div class="invalid-feedback">
+                                    Correo no Válido!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="txtFecNac">Fecha Nacimiento</label>
+                                <input type="date" class="form-control" id="txtFecNac" required>
+                                <div class="invalid-feedback">
+                                    Campo Obligatorio!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="txtContrasenia">Contraseña</label>
+                                <input type="password" class="form-control" id="txtContrasenia" placeholder="Ingresar Contraseña" onblur="$('#txtContrasenia2').focus()" equired>
+                                <div class="invalid-feedback">
+                                    Campo Obligatorio!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="txtContrasenia2">Reingresar Contraseña</label>
+                                <input type="password" class="form-control" id="txtContrasenia2" placeholder="Reingresar Contraseña" onblur="compruebapass()" required>
+                                <div class="invalid-feedback">
+                                    Campo Obligatorio!
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button class="btn btn-primary" onclick="grabarCliente()">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.Rut.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            traeClientes();
+            $('#txtRut').Rut({
+                on_error: function() {
+                    alert('Rut no Válido');
+                    $('#txtRut').val('');
+                },
+                on_success: function() {
+                    $("#error").hide('slow');
+
+                },
+                format_on: 'keyup'
+            });
+        });
+
+        function traeClientes() {
+            $('#btn1').show();
+            $('#btn2').hide();
+            $.ajax({
+                url: 'http://localhost:64618/api/clientes',
+                type: 'GET',
+                dataType: 'json',
+                success: function(result, status, xhr) {
+                    let html = '';
+                    for (let item of result.data) {
+                        html += '<tr>';
+                        html += '<td>' + item.rut + '</td>';
+                        html += '<td>' + item.nombre + '</td>';
+                        html += '<td>' + item.mail + '</td>';
+                        html += '<td>' + item.celular + '</td>';
+                        html += '<td>' + item.direccion + '</td>';
+                        html += '<td>' + item.estado + '</td>';
+                        html += '<td>' + item.fecha_nac + '</td>';
+                        html += '<td>' + item.clave + '</td>';
+                        html += '</tr>';
+                    }
+
+                    $('#llenarcontenido').html(html);
+                },
+                error: function(xhr, status) {
+                    console.log('fallo la solicitud');
+                }
+            })
+        }
+
+        function traeClientesxRut() {
+            $.ajax({
+                url: 'http://localhost:64618/api/cliente?rut=' + $('#buscaxrut').val(),
+                type: 'GET',
+                dataType: 'json',
+                success: function(result, status, xhr) {
+                    let html = '';
+                    html += '<tr>';
+                    html += '<td>' + result.data.rut + '</td>';
+                    html += '<td>' + result.data.nombre + '</td>';
+                    html += '<td>' + result.data.celular + '</td>';
+                    html += '<td>' + result.data.direccion + '</td>';
+                    html += '<td>' + result.data.estado + '</td>';
+                    html += '<td>' + result.data.mail + '</td>';
+                    html += '<td>' + result.data.fecha_nac + '</td>';
+                    html += '<td>' + result.data.clave + '</td>';
+                    html += '</tr>';
+
+                    $('#llenarcontenido').html(html);
+                    $('#btn1').hide();
+                    $('#btn2').show();
+                },
+                error: function(xhr, status) {
+                    console.log('fallo la solicitud');
+                }
+            })
+        }
+
+        function grabarCliente() {
+
+            if ($('#txtRut').val() != '') {
+                $.ajax({
+                    url: 'http://localhost:64618/api/cliente',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        rut: $('#txtRut').val(),
+                        nombre: $('#txtNombre').val(),
+                        celular: $('#txtCelular').val(),
+                        direccion: $('#txtDireccion').val(),
+                        estado: $('#selectEstadoCivil').val(),
+                        mail: $('#txtCorreo').val(),
+                        fecha_nac: $('#txtFecNac').val(),
+                        clave: $('#txtContrasenia').val()
+                    },
+                    success: function(result) {
+                        if (result.error == true) {
+                            alert("Error al ingresar datos, el Rut ya existe");
+                        } else {
+                            alert("Datos Ingresados Correctamente");
+                            document.getElementById("formulario").reset();
+                            $('#exampleModal').modal('hide');
+                            traeClientes();
+                        }
+                    },
+                    error: function(xhr, status) {
+                        console.log('fallo la solicitud');
+                    }
+                })
+            }
+        }
+
+        function comprueba1() {
+            var celu = $('#txtCelular').val();
+            var num = celu.length;
+            if ($('#txtCelular').val() != '') {
+                if (num < 8) {
+                    alert("El celular debe tener 8 digitos");
+                    $('#txtCelular').val('');
+                    $('#txtCelular').focus();
+                }
+            }
+        }
+
+        function compruebapass() {
+            var txtContrasenia = $('#txtContrasenia').val();
+            var txtContrasenia2 = $('#txtContrasenia2').val();
+
+            if (txtContrasenia != txtContrasenia2) {
+                alert("Las Contraseñas no coinciden");
+                $('#txtContrasenia2').focus()
+            }
+        }
+    </script>
+</body>
+
+</html>
